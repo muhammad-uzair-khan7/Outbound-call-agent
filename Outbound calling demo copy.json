@@ -1,0 +1,1423 @@
+{
+  "name": "Outbound calling demo copy",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Lead generating form",
+        "formDescription": "This form will help us generate some leads.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "What is your name"
+            },
+            {
+              "fieldLabel": "What is your email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "What is your phone number (without 0)",
+              "placeholder": "=3302853494",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        144,
+        608
+      ],
+      "id": "22711ca0-5f82-4d3b-93f9-c15fc58bd748",
+      "name": "On form submission",
+      "webhookId": "902fa2b1-429e-4877-af3c-0a872996d460"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "026c363f-bee3-4d84-bcde-f0b9f8e53fe0",
+              "name": "formattedNumber",
+              "value": "={{ $json['What is your phone number (without 0)'].toString().replace(/^0/, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "27150172-808b-47c7-9d1d-857c028b0acd",
+              "name": "userName",
+              "value": "={{ $json['What is your name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eb4394d7-6a6a-4cf7-a7dc-6f3fc5638a87",
+              "name": "email",
+              "value": "={{ $json['What is your email'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        608
+      ],
+      "id": "1d96274a-bc18-436b-bea3-cae2e1b8ea66",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vapi-call-tool",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        112
+      ],
+      "id": "2f623015-6fbf-4e10-99f7-fa4e10dc2cf0",
+      "name": "Webhook",
+      "webhookId": "7c43937d-160b-4d76-8e25-f7c90d8f150e"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KoNkbbhjkG_1470k0qLa3675rsCGFcrELDR_2m87ZKg",
+          "mode": "list",
+          "cachedResultName": "Outbound lead",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KoNkbbhjkG_1470k0qLa3675rsCGFcrELDR_2m87ZKg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KoNkbbhjkG_1470k0qLa3675rsCGFcrELDR_2m87ZKg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Edit Fields').item.json.userName }}",
+            "email": "={{ $('Edit Fields').item.json.email }}",
+            "phone number": "={{ $('Edit Fields').item.json.formattedNumber }}",
+            "call summary": "={{ $('AI Agent').item.json.output.call_summary.description }}",
+            "status": "={{ $json.output.status.type }}",
+            "booking date/time": "={{ $('AI Agent').item.json.output.booked_date_time.description }}",
+            "call transcript": "={{ $('HTTP Request1').item.json.transcript }}",
+            "follow-up": "={{ $('AI Agent').item.json.output.follow_up.description }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone number",
+              "displayName": "phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "call transcript",
+              "displayName": "call transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "call summary",
+              "displayName": "call summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "booking date/time",
+              "displayName": "booking date/time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "follow-up",
+              "displayName": "follow-up",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3104,
+        272
+      ],
+      "id": "35973348-c3ba-4f1d-ad80-d7a5faa54469",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "M1CXBv269JAqU2Ed",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You need to analyze this transcript:\n{{ $json.transcript }}\n\nNow your job is to write a summary for this call.\nOnce the summary is done, analyze the conversation again, and figure out what status can be inferred:\n\"Booked\", \"Unsure\", \"Rejected\",\nIf status is booked, figure out the date and time of call booking.\nIf it is unsure or he didn't picked the call, write a follow up date of your choice or customer's choice. \nIf it's rejected, do nothing.\n\nIf client asks to book a meeting, use calendar tool to create a meeting.\nIf agent wants to look for open slots available, it can use calendar tool to get availablity.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a lead generation sales specialist who can analyze the transcripts of different calls and sales agent for lead generation. The calls will be regarding users who have subscribed to our AI integration lead form, and we'll be trying to convince them to buy our offer."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2464,
+        192
+      ],
+      "id": "a08a3768-1062-4ed2-8d2b-de1b6f20a95d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"status\": {\n      \"type\": \"string\",\n      \"enum\": [\"Booked\", \"Unsure\", \"Rejected\"],\n      \"description\": \"The current status of the call.\"\n    },\n    \"call_summary\": {\n      \"type\": \"string\",\n      \"description\": \"A brief summary of the conversation.\"\n    },\n    \"call_transcript\": {\n      \"type\": \"string\",\n      \"description\": \"The full text transcript of the call.\"\n    },\n    \"booked_date_time\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"This will be booking date and time if call is booked. Date time format will be DD/MM/YY-HH:MM\"\n    },\n    \"follow_up\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"This will be follow up date if user doesn't pick up call or tells to reschedule the call\"\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2816,
+        368
+      ],
+      "id": "c7b5732f-9678-4b0b-8fba-287fe8b70a8b",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        2176,
+        432
+      ],
+      "id": "7a7698e1-82d5-4c1d-9938-356d6cbb9dfd",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "N9fKDDsbGBTEDQE6",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "arshaduzair140@gmail.com",
+          "mode": "list",
+          "cachedResultName": "arshaduzair140@gmail.com"
+        },
+        "timeMax": "={{ $now.plus(2, 'day') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2384,
+        432
+      ],
+      "id": "7683c1b5-b556-42d7-aed6-00d1afcf782b",
+      "name": "Get availability in a calendar in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Wp4HKQ93a3Cbvrqc",
+          "name": "Google Calendar OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "arshaduzair140@gmail.com",
+          "mode": "list",
+          "cachedResultName": "arshaduzair140@gmail.com"
+        },
+        "end": "={{ $now.plus(2, 'day') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2688,
+        400
+      ],
+      "id": "4922aed6-ee8a-4ee6-a295-4fdd73f40e98",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Wp4HKQ93a3Cbvrqc",
+          "name": "Google Calendar OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4c1bdc55-c2e3-4a92-abd1-954ed4657b4e",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "Booked",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3328,
+        304
+      ],
+      "id": "aa8af745-a50d-4ada-a3dd-7d991cbca442",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.email }}",
+        "subject": "Booking confirmation",
+        "message": "You have booked a call with us",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3568,
+        272
+      ],
+      "id": "faf26252-ed37-4a2e-b38f-9c8c6955ab0c",
+      "name": "Send a message",
+      "webhookId": "50c21fdb-0672-4e76-9630-fb624d7bad1c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "cG6lB9ufkv6NYzLK",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e4eb521e-f67d-4ea6-8b78-5836dcf16d69",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "Unsure",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3472,
+        464
+      ],
+      "id": "5a7e48c4-b13a-498c-afbb-2e61a32da687",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3776,
+        432
+      ],
+      "id": "0498c9e6-7558-4e6f-ac24-a96bbbff4cd1",
+      "name": "Wait1",
+      "webhookId": "bb64efac-0839-4252-a9dd-b15c276be8c8"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['What is your email'] }}",
+        "subject": "=Why no",
+        "message": "Why you didn't took our offer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        4016,
+        480
+      ],
+      "id": "d3ea877e-e5f3-4cb6-81bd-3e996d0ebfc6",
+      "name": "Send a message1",
+      "webhookId": "356c7f58-a445-4485-af0c-c78f578126a0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "cG6lB9ufkv6NYzLK",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        640
+      ],
+      "id": "7dd364e1-5b2d-4a05-ac19-44e193f7c370",
+      "name": "Form - call wait",
+      "webhookId": "1c679812-8f9f-40b8-9d92-e81e52392f3b"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vapi.ai/call",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"assistantId\": \"60a74714-ce25-40f0-a2da-069c14473468\",\n  \"phoneNumberId\": \"7b9e6475-bf8c-4a50-8274-6f39944e1ce8\",\n  \"customer\": {\n    \"number\": \"{{ $json.formattedNumber }}\",\n    \"name\": \"{{ $json.userName }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        944,
+        640
+      ],
+      "id": "3718dcc4-a0e1-4fb1-8191-73cc49688d29",
+      "name": "Inititate a call",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CgHoCwXODho0ouEB",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a8030a87-cba8-433f-b481-f26422a80973",
+              "name": "=name",
+              "value": "={{ $('Edit Fields').item.json.userName }}",
+              "type": "string"
+            },
+            {
+              "id": "e3ac2dd7-ca57-4df5-81e2-5649e0e32487",
+              "name": "number",
+              "value": "={{ $('Edit Fields').item.json.formattedNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "5c4950e6-94d5-409f-885a-d0aa725bebb6",
+              "name": "email",
+              "value": "={{ $('Edit Fields').item.json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "2eb684b0-b295-455c-9a77-92ad87a41adf",
+              "name": "transcript",
+              "value": "={{ $json.transcript }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1952,
+        304
+      ],
+      "id": "90cd8e9e-ea8d-446b-8cab-de8ac98f3bdc",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2b628dcd-3e3d-41f2-84a1-47a8142e1107",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ended",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1632,
+        640
+      ],
+      "id": "a77e18b9-b15d-4617-a91f-9d7edf2a1660",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.vapi.ai/call/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1408,
+        640
+      ],
+      "id": "68c844d3-83b7-43af-9106-4afec1e0eede",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CgHoCwXODho0ouEB",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1152,
+        640
+      ],
+      "id": "0bf7af60-94b5-4643-b646-98a3eb3d15a5",
+      "name": "Wait2",
+      "webhookId": "a1d8e220-19dc-4fe5-a24b-3c10dacbae1b"
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1808,
+        784
+      ],
+      "id": "88b8a030-db5d-49a1-9b82-301733d74deb",
+      "name": "Wait3",
+      "webhookId": "7aabd0f6-d366-4dea-b646-a29019180bd2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "daffaeb0-a861-4525-b48a-9dea301122a6",
+              "name": "retry_count",
+              "value": 0,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1952,
+        928
+      ],
+      "id": "6844a6b3-1d21-4b2b-a325-99a19be0d833",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3e7e3f14-43d2-4df5-9ef7-2ab09346fdd0",
+              "leftValue": "={{ $json.retry_count }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        928,
+        880
+      ],
+      "id": "542601c6-766c-4e21-a2f0-2fb7df8370c2",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5057ff5b-e38c-44a8-a771-435e3e7f06a3",
+              "name": "=retry_count",
+              "value": "={{ $json.retry_count +1 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        784
+      ],
+      "id": "b60be7da-06a2-4311-834c-8a6fa12ea2bb",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46ad6f87-e736-4a09-99f9-e132060ea179",
+              "name": "transcript",
+              "value": "={{ $json.transcript }}",
+              "type": "string"
+            },
+            {
+              "id": "376ed658-eebc-4ed3-8f1d-d8f03fecf87d",
+              "name": "name",
+              "value": "={{ $('Edit Fields').item.json.userName }}",
+              "type": "string"
+            },
+            {
+              "id": "923a0db8-cb40-4c73-9f76-96a3285a3fd1",
+              "name": "formattedNumber",
+              "value": "={{ $('Edit Fields').item.json.formattedNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "d69a698a-a0cd-4504-ae1b-2ca49a4c0cf5",
+              "name": "email",
+              "value": "={{ $('Edit Fields').item.json.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3024,
+        896
+      ],
+      "id": "ee1ad1b2-2d78-49e4-9844-2454519fb8a8",
+      "name": "Edit Fields2",
+      "disabled": true
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "uzairtestuno.app.n8n.cloud",
+            "user-agent": "axios/1.8.3",
+            "content-length": "14434",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, br",
+            "baggage": "sentry-environment=production,sentry-public_key=b809f86cbb83b63ab694d80d4a81fe55,sentry-trace_id=466c062f8e6c453fb02eaebbd2a8995e",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "16.146.70.29",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "US",
+            "cf-ray": "9f6f0a70f8f5dabf-PDX",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "cookie": {
+              "__redacted": true,
+              "reason": "node_defined_field",
+              "canReveal": false
+            },
+            "sentry-trace": "466c062f8e6c453fb02eaebbd2a8995e-b3449bfe4f1035e8",
+            "traceparent": "00-e3c8939f8dcccb1adb34d5eaa010ce55-771c16389f939a61-01",
+            "x-chat-id": "52ac8f70-5e61-465d-b3c3-2078f46a33dd",
+            "x-forwarded-for": "16.146.70.29, 172.68.174.204",
+            "x-forwarded-host": "uzairtestuno.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-71-84c76fc7d-dbjf5",
+            "x-is-trusted": "yes",
+            "x-real-ip": "16.146.70.29",
+            "x-vapi-secret": ""
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "message": {
+              "timestamp": 1777976721944,
+              "type": "tool-calls",
+              "toolCalls": [
+                {
+                  "id": "call_e4agjRxS0JslJXv6ManOiQ5h",
+                  "type": "function",
+                  "function": {
+                    "name": "update_google_sheets",
+                    "arguments": {
+                      "booking_date_time": "Wednesday 10:00 AM"
+                    }
+                  }
+                }
+              ],
+              "toolCallList": [
+                {
+                  "id": "call_e4agjRxS0JslJXv6ManOiQ5h",
+                  "type": "function",
+                  "function": {
+                    "name": "update_google_sheets",
+                    "arguments": {
+                      "booking_date_time": "Wednesday 10:00 AM"
+                    }
+                  }
+                }
+              ],
+              "toolWithToolCallList": [
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "update_google_sheets",
+                    "parameters": {
+                      "type": "object",
+                      "required": [],
+                      "properties": {
+                        "booking_date_time": {
+                          "type": "string",
+                          "default": "",
+                          "description": "this will be booking date and time"
+                        }
+                      }
+                    },
+                    "description": "This will be used to update the lead form clients"
+                  },
+                  "server": {
+                    "url": "https://uzairtestuno.app.n8n.cloud/webhook-test/vapi-call-tool",
+                    "timeoutSeconds": 20,
+                    "headers": {
+                      "X-Chat-Id": "52ac8f70-5e61-465d-b3c3-2078f46a33dd"
+                    }
+                  },
+                  "messages": [
+                    {
+                      "type": "request-start",
+                      "contents": [],
+                      "conditions": [],
+                      "blocking": false
+                    }
+                  ],
+                  "variableExtractionPlan": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "status",
+                        "call summary"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "description": "Status will be one word and either of these 3 choices:\n\"Booked\", \"Unsure\", \"Rejected\""
+                        },
+                        "call summary": {
+                          "type": "string",
+                          "description": ""
+                        },
+                        "call transcript": {
+                          "type": "string",
+                          "description": ""
+                        },
+                        "booked_date_time": {
+                          "type": "string",
+                          "description": "This will extract call booking's date and time in format:\nDD-MM-YY/ HH-MM"
+                        }
+                      }
+                    }
+                  },
+                  "toolCall": {
+                    "id": "call_e4agjRxS0JslJXv6ManOiQ5h",
+                    "type": "function",
+                    "function": {
+                      "name": "update_google_sheets",
+                      "arguments": {
+                        "booking_date_time": "Wednesday 10:00 AM"
+                      }
+                    }
+                  }
+                }
+              ],
+              "artifact": {
+                "messages": [
+                  {
+                    "role": "system",
+                    "message": "Role & Persona\nYou are a high-energy, professional AI Solutions Consultant. Your goal is to convert leads who filled out an AI integration form into booked discovery calls. You are persuasive, knowledgeable about automation, and direct about pricing.\n\nPhase 1: Opening & Validation\nIdentify: Introduce yourself and mention they recently filled out the lead form regarding AI integration.\n\nPermission: Ask if they have a few minutes to discuss how AI can specifically optimize their current workflow.\n\nPhase 2: Discovery & Value Proposition\nAsk targeted questions to understand their needs:\n\nWorkflows: \"Which part of your daily operations takes up the most manual time?\"\n\nIntegration Points: Suggest areas like customer support (voice/chat), lead qualification, or internal data retrieval.\n\nConvince: Explain that AI isn't just a \"trend\" but a cost-saving measure that allows their team to focus on high-value tasks rather than repetitive admin work.\n\nPhase 3: Pricing Overview (Transparency Guardrai...",
+                    "time": 1777976721340,
+                    "secondsFromStart": 0
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Hello, this is Elliot from Gamma Logic. We saw you filled a form regarding businesses who needs AI integration. Are you willing to talk about that right now?",
+                    "time": 1777976721340,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "role": "user",
+                    "message": "hello, I want to replace my sales executives with AI agents for my inbound ccalls. I have an ecommerce business and I need just 1 agent to replace it",
+                    "time": 1777976721341,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Thank you for clarifying—I'm happy to help. Just to confirm, you'd like an AI voice agent to handle your inbound calls and manage sales conversations for your ecommerce business, right?\n\nDo you have a few minutes to talk about your current call process and what specific tasks you want the AI to handle—for example, answering FAQs, order status, or product recommendations? This will help me recommend the right solution.",
+                    "time": 1777976721342,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "role": "user",
+                    "message": "it's mostly order status and product problems realted",
+                    "time": 1777976721343,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Perfect, that's a very strong use case for AI voice agents.\n\nJust a couple of quick questions:\n- About how many calls per day does your team typically receive?\n- Are there any integrations your current phone system or backend uses (like Shopify, WooCommerce, or a CRM), or would the AI just check a database?\n\nThis helps me ensure the agent can fetch order info and address product-related issues efficiently for your customers.",
+                    "time": 1777976721344,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "role": "user",
+                    "message": "about 40-50, I just wqant ot book a call",
+                    "time": 1777976721345,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Great! Thanks for sharing that detail.\n\nLet’s get this discovery call scheduled. I have access to my calendar—can you tell me what time works best for you in the next two days, excluding Monday, Thursday, or Saturday? I’ll look for a 30-minute slot that works and send a confirmation to your email right after we book.",
+                    "time": 1777976721346,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "role": "user",
+                    "message": "do it for wednesday 10 am",
+                    "time": 1777976721347,
+                    "secondsFromStart": 0,
+                    "endTime": 1777976721340
+                  },
+                  {
+                    "toolCalls": [
+                      {
+                        "id": "call_e4agjRxS0JslJXv6ManOiQ5h",
+                        "type": "function",
+                        "function": {
+                          "name": "update_google_sheets",
+                          "arguments": "{\"booking_date_time\": \"Wednesday 10:00 AM\"}"
+                        }
+                      }
+                    ],
+                    "role": "tool_calls",
+                    "message": "",
+                    "time": 1777976721939,
+                    "secondsFromStart": 0.599
+                  }
+                ],
+                "messagesOpenAIFormatted": [
+                  {
+                    "role": "system",
+                    "content": "Role & Persona\nYou are a high-energy, professional AI Solutions Consultant. Your goal is to convert leads who filled out an AI integration form into booked discovery calls. You are persuasive, knowledgeable about automation, and direct about pricing.\n\nPhase 1: Opening & Validation\nIdentify: Introduce yourself and mention they recently filled out the lead form regarding AI integration.\n\nPermission: Ask if they have a few minutes to discuss how AI can specifically optimize their current workflow.\n\nPhase 2: Discovery & Value Proposition\nAsk targeted questions to understand their needs:\n\nWorkflows: \"Which part of your daily operations takes up the most manual time?\"\n\nIntegration Points: Suggest areas like customer support (voice/chat), lead qualification, or internal data retrieval.\n\nConvince: Explain that AI isn't just a \"trend\" but a cost-saving measure that allows their team to focus on high-value tasks rather than repetitive admin work.\n\nPhase 3: Pricing Overview (Transparency Guardrai..."
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Hello, this is Elliot from Gamma Logic. We saw you filled a form regarding businesses who needs AI integration. Are you willing to talk about that right now?"
+                  },
+                  {
+                    "role": "user",
+                    "content": "hello, I want to replace my sales executives with AI agents for my inbound ccalls. I have an ecommerce business and I need just 1 agent to replace it"
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Thank you for clarifying—I'm happy to help. Just to confirm, you'd like an AI voice agent to handle your inbound calls and manage sales conversations for your ecommerce business, right?\n\nDo you have a few minutes to talk about your current call process and what specific tasks you want the AI to handle—for example, answering FAQs, order status, or product recommendations? This will help me recommend the right solution."
+                  },
+                  {
+                    "role": "user",
+                    "content": "it's mostly order status and product problems realted"
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Perfect, that's a very strong use case for AI voice agents.\n\nJust a couple of quick questions:\n- About how many calls per day does your team typically receive?\n- Are there any integrations your current phone system or backend uses (like Shopify, WooCommerce, or a CRM), or would the AI just check a database?\n\nThis helps me ensure the agent can fetch order info and address product-related issues efficiently for your customers."
+                  },
+                  {
+                    "role": "user",
+                    "content": "about 40-50, I just wqant ot book a call"
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Great! Thanks for sharing that detail.\n\nLet’s get this discovery call scheduled. I have access to my calendar—can you tell me what time works best for you in the next two days, excluding Monday, Thursday, or Saturday? I’ll look for a 30-minute slot that works and send a confirmation to your email right after we book."
+                  },
+                  {
+                    "role": "user",
+                    "content": "do it for wednesday 10 am"
+                  },
+                  {
+                    "role": "assistant",
+                    "tool_calls": [
+                      {
+                        "id": "call_e4agjRxS0JslJXv6ManOiQ5h",
+                        "type": "function",
+                        "function": {
+                          "name": "update_google_sheets",
+                          "arguments": "{\"booking_date_time\": \"Wednesday 10:00 AM\"}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "tool",
+                    "tool_call_id": "call_e4agjRxS0JslJXv6ManOiQ5h",
+                    "content": "Tool Result Still Pending But Proceed Further If Possible."
+                  }
+                ]
+              },
+              "chat": {
+                "id": "52ac8f70-5e61-465d-b3c3-2078f46a33dd",
+                "orgId": "4ba25315-3b44-4168-9e24-0d108fc762f3",
+                "createdAt": "2026-03-10T10:47:35.724Z",
+                "updatedAt": "2026-05-05T10:20:34.556Z"
+              },
+              "assistant": {
+                "id": "60a74714-ce25-40f0-a2da-069c14473468",
+                "orgId": "4ba25315-3b44-4168-9e24-0d108fc762f3",
+                "name": "Uzair",
+                "voice": {
+                  "voiceId": "Elliot",
+                  "provider": "vapi",
+                  "fallbackPlan": {
+                    "voices": [
+                      {
+                        "model": "eleven_multilingual_v2",
+                        "voiceId": "pGMp7Agf4sG0hyhiiGiw",
+                        "provider": "11labs",
+                        "stability": 0.5,
+                        "similarityBoost": 0.75
+                      }
+                    ]
+                  }
+                },
+                "createdAt": "2026-04-28T11:00:16.050Z",
+                "updatedAt": "2026-05-05T10:23:47.534Z",
+                "model": {
+                  "model": "gpt-4.1",
+                  "toolIds": [
+                    "87606b9d-e822-4728-a683-98243b06039b"
+                  ],
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "Role & Persona\nYou are a high-energy, professional AI Solutions Consultant. Your goal is to convert leads who filled out an AI integration form into booked discovery calls. You are persuasive, knowledgeable about automation, and direct about pricing.\n\nPhase 1: Opening & Validation\nIdentify: Introduce yourself and mention they recently filled out the lead form regarding AI integration.\n\nPermission: Ask if they have a few minutes to discuss how AI can specifically optimize their current workflow.\n\nPhase 2: Discovery & Value Proposition\nAsk targeted questions to understand their needs:\n\nWorkflows: \"Which part of your daily operations takes up the most manual time?\"\n\nIntegration Points: Suggest areas like customer support (voice/chat), lead qualification, or internal data retrieval.\n\nConvince: Explain that AI isn't just a \"trend\" but a cost-saving measure that allows their team to focus on high-value tasks rather than repetitive admin work.\n\nPhase 3: Pricing Overview (Transparency Guardrails)\nIf the prospect shows interest or asks about cost, provide this strictly defined overview:\n\nBasic AI Voice Agents: $500 (Setup/Development).\n\nNote: Clearly state this excludes platform costs (Vapi, GoHighLevel) and per-minute API usage.\n\nRAG-Based Chatbots: $300 (Basic tool implementation).\n\nAdvanced AI Systems: Up to $600 depending on complexity.\n\nNote: Always clarify that API costs are billed separately based on usage.\n\nPhase 4: Scheduling & Tools\nIf the client agrees to a deeper discovery call:\n\nCheck Availability: Use the calendar_tool to find slots.\n\nConstraint: Only look for slots in the next 2 days.\n\nConstraint: Exclude Mondays, Thursdays, and Saturdays.\n\nBuffer: Ensure a 30-minute gap between any existing appointments.\n\nConfirm & Execute:\n\nOnce a time is picked, use schedule_booking.\n\nTrigger send_email_confirmation with the meeting link.\n\nUse update_google_sheets to log the \"Booked\", \"Unsure\", and \"Rejected\" status and details.\n\nPhase 5: Handling Uncertainty\nIf the client is \"not sure,\" \"busy,\" or \"needs to think,\" do not push aggressively.\n\nAction: Use the update_google_sheets to add their details to the \"Follow-up\" tab, and append status tab to \"Unsure\" in Google Sheets so a human can reach out later.\n\nPhase 6:\nIf a client denies to have the offer(our service), use update_google_sheets to update status tab to \"Rejected\",\n\nPhase 7:\nAlways add call summary to summary tab in update_google_sheets tool, and also add call transcript using update_google_sheets tool.\n\nCommunication Guardrails\nConciseness: Keep responses short; this is a phone call, not an email.\n\nNo Hallucination: Do not promise features we cannot build. Stick to Voice Agents, RAG Chatbots, and Workflow Automation.\n\nPlatform Clarity: Always mention that Vapi/GoHighLevel/OpenAI API costs are separate from our service fee.\n\nTone: Professional, helpful, and confident."
+                    }
+                  ],
+                  "provider": "openai",
+                  "tools": [
+                    {
+                      "id": "87606b9d-e822-4728-a683-98243b06039b",
+                      "createdAt": "2026-04-11T17:15:29.985Z",
+                      "updatedAt": "2026-05-05T10:23:20.567Z",
+                      "type": "function",
+                      "function": {
+                        "name": "update_google_sheets",
+                        "parameters": {
+                          "type": "object",
+                          "required": [],
+                          "properties": {
+                            "booking_date_time": {
+                              "type": "string",
+                              "default": "",
+                              "description": "this will be booking date and time"
+                            }
+                          }
+                        },
+                        "description": "This will be used to update the lead form clients"
+                      },
+                      "messages": [
+                        {
+                          "type": "request-start",
+                          "blocking": false
+                        }
+                      ],
+                      "orgId": "4ba25315-3b44-4168-9e24-0d108fc762f3",
+                      "server": {
+                        "url": "https://uzairtestuno.app.n8n.cloud/webhook-test/vapi-call-tool",
+                        "timeoutSeconds": 20,
+                        "headers": {
+                          "X-Chat-Id": "52ac8f70-5e61-465d-b3c3-2078f46a33dd"
+                        }
+                      },
+                      "variableExtractionPlan": {
+                        "schema": {
+                          "type": "object",
+                          "required": [
+                            "status",
+                            "call summary"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "description": "Status will be one word and either of these 3 choices:\n\"Booked\", \"Unsure\", \"Rejected\""
+                            },
+                            "call summary": {
+                              "type": "string",
+                              "description": ""
+                            },
+                            "call transcript": {
+                              "type": "string",
+                              "description": ""
+                            },
+                            "booked_date_time": {
+                              "type": "string",
+                              "description": "This will extract call booking's date and time in format:\nDD-MM-YY/ HH-MM"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "firstMessage": "Hello, this is Elliot from Gamma Logic. We saw you filled a form regarding businesses who needs AI integration. Are you willing to talk about that right now?",
+                "voicemailMessage": "Hello, this is Morgan from GrowthPartners. I'm calling to discuss how our solutions might help your business operations. I'll try reaching you again, or feel free to call us back at your convenience.",
+                "endCallMessage": "Thank you for taking the time to discuss your needs with me today. Our team will be in touch with more information soon. Have a great day!",
+                "transcriber": {
+                  "model": "flux-general-en",
+                  "language": "en",
+                  "provider": "deepgram",
+                  "fallbackPlan": {
+                    "transcribers": [
+                      {
+                        "model": "flux-general-en",
+                        "language": "en",
+                        "provider": "deepgram"
+                      }
+                    ]
+                  }
+                },
+                "analysisPlan": {
+                  "summaryPlan": {
+                    "enabled": false
+                  },
+                  "successEvaluationPlan": {
+                    "enabled": false
+                  }
+                },
+                "backgroundDenoisingEnabled": true,
+                "server": {
+                  "url": "https://uzairtestuno.app.n8n.cloud/webhook-test/vapi-call-tool",
+                  "timeoutSeconds": 20
+                }
+              }
+            }
+          },
+          "webhookUrl": "https://uzairtestuno.app.n8n.cloud/webhook-test/vapi-call-tool",
+          "executionMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Form - call wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get availability in a calendar in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form - call wait": {
+      "main": [
+        [
+          {
+            "node": "Inititate a call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inititate a call": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "72435ecf-5e3d-4ac7-989d-35f81c2c22f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a373e0ea900832104a779a532913cdb20c698dc062bbae0e37b44573ac0e0087"
+  },
+  "id": "lkTsB1vyU4LN46Th",
+  "tags": []
+}
